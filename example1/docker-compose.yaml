@@ -1,0 +1,9 @@
+services:
+  maestro:
+    entrypoint: /home/cosim/entrypoint.sh
+    image: prasadtalasila/maestro-openjdk13
+    volumes:
+    - /home/prasad/demo/openjdk-docker/docker-run/model:/home/model:rw
+    - /home/prasad/demo/openjdk-docker/docker-run/output:/home/output:rw
+version: '3.9'
+

@@ -12,5 +12,8 @@ sudo docker push -a prasadtalasila/maestro-openjdk13
 1. Create two directories
     * model - keep cosim-model.zip file in this directory
     * output - the output files and logs will be stored here
-2. Execute the docker run command
+2. Execute the docker run command    
     `sudo docker run --entrypoint '/home/cosim/entrypoint.sh' --name maestro-openjdk13-run --volume "$PWD/model:/home/model" --volume "$PWD/output:/home/output" maestro-openjdk13`
+3. If you have docker-compose installed, you can try    
+    `sudo docker-compose up` and    
+    `sudo docker-compose down`

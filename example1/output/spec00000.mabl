@@ -1,0 +1,131 @@
+simulation 
+import JacobianStepBuilder;
+import Initializer;
+import DebugLogging;
+import TypeConverter;
+import DataWriter;
+import FMI2;
+import Math;
+import ArrayUtil;
+import Logger;
+import BooleanLogic;
+import MEnv;
+@Framework( "FMI2");
+@FrameworkConfig( "FMI2", "{\"fmus\":{\"{msd1}\":\"file:///home/cosim/MassSpringDamper1.fmu\",\"{msd2}\":\"file:///home/cosim/MassSpringDamper2.fmu\"},\"connections\":{\"{msd1}.msd1i.x1\":[\"{msd2}.msd2i.x1\"],\"{msd1}.msd1i.v1\":[\"{msd2}.msd2i.v1\"],\"{msd2}.msd2i.fk\":[\"{msd1}.msd1i.fk\"]},\"logVariables\":{\"{msd2}.msd2i\":[\"x2\",\"v2\"]}}");
+{
+ 	bool global_execution_continue = true;
+	int FMI_STATUS_OK = 0;
+	int FMI_STATUS_WARNING = 1;
+	int FMI_STATUS_DISCARD = 2;
+	int FMI_STATUS_ERROR = 3;
+	int FMI_STATUS_FATAL = 4;
+	int FMI_STATUS_PENDING = 5;
+	int status = 0;
+	Math math = null;
+	Logger logger = null;
+	DataWriter dataWriter = null;
+	BooleanLogic booleanLogic = null;
+	@mapFmu(msd1 -> "{msd1}");
+	FMI2 msd1 = null;
+	@mapFmu(msd2 -> "{msd2}");
+	FMI2 msd2 = null;
+	@mapInstance(msd2i -> "msd2i");
+	FMI2Component msd2i = null;
+	@mapInstance(msd1i -> "msd1i");
+	FMI2Component msd1i = null;
+	try 
+	{
+		math = load("Math");
+		if( (math == null) )
+		{
+				error "math IS NULL ";
+		}
+		logger = load("Logger");
+		if( (logger == null) )
+		{
+				error "logger IS NULL ";
+		}
+		dataWriter = load("DataWriter");
+		if( (dataWriter == null) )
+		{
+				error "dataWriter IS NULL ";
+		}
+		booleanLogic = load("BooleanLogic");
+		if( (booleanLogic == null) )
+		{
+				error "booleanLogic IS NULL ";
+		}
+		msd1 = load("FMI2", "{da03fa66-a02a-43d6-a906-db865e2ea044}", "file:/home/cosim/MassSpringDamper1.fmu");
+		if( (msd1 == null) )
+		{
+				error "msd1 IS NULL ";
+		}
+		msd2 = load("FMI2", "{9113a387-2c02-42ae-ae68-5073bf845034}", "file:/home/cosim/MassSpringDamper2.fmu");
+		if( (msd2 == null) )
+		{
+				error "msd2 IS NULL ";
+		}
+		msd2i = msd2.instantiate("msd2i", false, false);
+		if( (msd2i == null) )
+		{
+				error "msd2i IS NULL ";
+		}
+		msd1i = msd1.instantiate("msd1i", false, false);
+		if( (msd1i == null) )
+		{
+				error "msd1i IS NULL ";
+		}
+		FMI2Component components[2] = { msd2i , msd1i };
+		real STEP_SIZE = 0.001;
+		real START_TIME = 0.0;
+		real END_TIME = 10.0;
+		@Config("{\"environmentParameters\":null,\"parameters\":{\"{msd2}.msd2i.c2\":1.0,\"{msd2}.msd2i.cc\":1.0,\"{msd2}.msd2i.d2\":1.0,\"{msd2}.msd2i.dc\":1.0,\"{msd2}.msd2i.m2\":1.0}}");
+		Initializer.expand initialize(components, START_TIME, END_TIME);
+		@Config("{\"variablesOfInterest\":[],\"stabilisation\":false,\"absoluteTolerance\":0.0,\"relativeTolerance\":0.0,\"stabilisationLoopMaxIterations\":0,\"simulationProgramDelay\":false,\"setGetDerivatives\":false,\"startTime\":0.0,\"endTime\":10.0,\"stepAlgorithm\":{\"type\":\"fixed-step\",\"size\":0.001}}");
+		JacobianStepBuilder.expand fixedStepSize(components, STEP_SIZE, START_TIME, END_TIME);
+		msd2i.terminate();
+		msd1i.terminate();
+	}	finally 
+	{
+		if( (msd2i != null) )
+		{
+				msd2.freeInstance(msd2i);
+				msd2i = null;
+		}
+		if( (msd1i != null) )
+		{
+				msd1.freeInstance(msd1i);
+				msd1i = null;
+		}
+		if( (msd1 != null) )
+		{
+				unload(msd1);
+				msd1 = null;
+		}
+		if( (msd2 != null) )
+		{
+				unload(msd2);
+				msd2 = null;
+		}
+		if( (math != null) )
+		{
+				unload(math);
+				math = null;
+		}
+		if( (logger != null) )
+		{
+				unload(logger);
+				logger = null;
+		}
+		if( (dataWriter != null) )
+		{
+				unload(dataWriter);
+				dataWriter = null;
+		}
+		if( (booleanLogic != null) )
+		{
+				unload(booleanLogic);
+				booleanLogic = null;
+		}
+	}
+}

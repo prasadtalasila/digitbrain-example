@@ -1,0 +1,131 @@
+1  simulation 
+2  import JacobianStepBuilder;
+3  import Initializer;
+4  import DebugLogging;
+5  import TypeConverter;
+6  import DataWriter;
+7  import FMI2;
+8  import Math;
+9  import ArrayUtil;
+10  import Logger;
+11  import BooleanLogic;
+12  import MEnv;
+13  @Framework( "FMI2");
+14  @FrameworkConfig( "FMI2", "{\"fmus\":{\"{msd1}\":\"file:///home/cosim/MassSpringDamper1.fmu\",\"{msd2}\":\"file:///home/cosim/MassSpringDamper2.fmu\"},\"connections\":{\"{msd1}.msd1i.x1\":[\"{msd2}.msd2i.x1\"],\"{msd1}.msd1i.v1\":[\"{msd2}.msd2i.v1\"],\"{msd2}.msd2i.fk\":[\"{msd1}.msd1i.fk\"]},\"logVariables\":{\"{msd2}.msd2i\":[\"x2\",\"v2\"]}}");
+15  {
+16   	bool global_execution_continue = true;
+17  	int FMI_STATUS_OK = 0;
+18  	int FMI_STATUS_WARNING = 1;
+19  	int FMI_STATUS_DISCARD = 2;
+20  	int FMI_STATUS_ERROR = 3;
+21  	int FMI_STATUS_FATAL = 4;
+22  	int FMI_STATUS_PENDING = 5;
+23  	int status = 0;
+24  	Math math = null;
+25  	Logger logger = null;
+26  	DataWriter dataWriter = null;
+27  	BooleanLogic booleanLogic = null;
+28  	@mapFmu(msd1 -> "{msd1}");
+29  	FMI2 msd1 = null;
+30  	@mapFmu(msd2 -> "{msd2}");
+31  	FMI2 msd2 = null;
+32  	@mapInstance(msd2i -> "msd2i");
+33  	FMI2Component msd2i = null;
+34  	@mapInstance(msd1i -> "msd1i");
+35  	FMI2Component msd1i = null;
+36  	try 
+37  	{
+38  		math = load("Math");
+39  		if( (math == null) )
+40  		{
+41  				error "math IS NULL ";
+42  		}
+43  		logger = load("Logger");
+44  		if( (logger == null) )
+45  		{
+46  				error "logger IS NULL ";
+47  		}
+48  		dataWriter = load("DataWriter");
+49  		if( (dataWriter == null) )
+50  		{
+51  				error "dataWriter IS NULL ";
+52  		}
+53  		booleanLogic = load("BooleanLogic");
+54  		if( (booleanLogic == null) )
+55  		{
+56  				error "booleanLogic IS NULL ";
+57  		}
+58  		msd1 = load("FMI2", "{da03fa66-a02a-43d6-a906-db865e2ea044}", "file:/home/cosim/MassSpringDamper1.fmu");
+59  		if( (msd1 == null) )
+60  		{
+61  				error "msd1 IS NULL ";
+62  		}
+63  		msd2 = load("FMI2", "{9113a387-2c02-42ae-ae68-5073bf845034}", "file:/home/cosim/MassSpringDamper2.fmu");
+64  		if( (msd2 == null) )
+65  		{
+66  				error "msd2 IS NULL ";
+67  		}
+68  		msd2i = msd2.instantiate("msd2i", false, false);
+69  		if( (msd2i == null) )
+70  		{
+71  				error "msd2i IS NULL ";
+72  		}
+73  		msd1i = msd1.instantiate("msd1i", false, false);
+74  		if( (msd1i == null) )
+75  		{
+76  				error "msd1i IS NULL ";
+77  		}
+78  		FMI2Component components[2] = { msd2i , msd1i };
+79  		real STEP_SIZE = 0.001;
+80  		real START_TIME = 0.0;
+81  		real END_TIME = 10.0;
+82  		@Config("{\"environmentParameters\":null,\"parameters\":{\"{msd2}.msd2i.c2\":1.0,\"{msd2}.msd2i.cc\":1.0,\"{msd2}.msd2i.d2\":1.0,\"{msd2}.msd2i.dc\":1.0,\"{msd2}.msd2i.m2\":1.0}}");
+83  		Initializer.expand initialize(components, START_TIME, END_TIME);
+84  		@Config("{\"variablesOfInterest\":[],\"stabilisation\":false,\"absoluteTolerance\":0.0,\"relativeTolerance\":0.0,\"stabilisationLoopMaxIterations\":0,\"simulationProgramDelay\":false,\"setGetDerivatives\":false,\"startTime\":0.0,\"endTime\":10.0,\"stepAlgorithm\":{\"type\":\"fixed-step\",\"size\":0.001}}");
+85  		JacobianStepBuilder.expand fixedStepSize(components, STEP_SIZE, START_TIME, END_TIME);
+86  		msd2i.terminate();
+87  		msd1i.terminate();
+88  	}	finally 
+89  	{
+90  		if( (msd2i != null) )
+91  		{
+92  				msd2.freeInstance(msd2i);
+93  				msd2i = null;
+94  		}
+95  		if( (msd1i != null) )
+96  		{
+97  				msd1.freeInstance(msd1i);
+98  				msd1i = null;
+99  		}
+100  		if( (msd1 != null) )
+101  		{
+102  				unload(msd1);
+103  				msd1 = null;
+104  		}
+105  		if( (msd2 != null) )
+106  		{
+107  				unload(msd2);
+108  				msd2 = null;
+109  		}
+110  		if( (math != null) )
+111  		{
+112  				unload(math);
+113  				math = null;
+114  		}
+115  		if( (logger != null) )
+116  		{
+117  				unload(logger);
+118  				logger = null;
+119  		}
+120  		if( (dataWriter != null) )
+121  		{
+122  				unload(dataWriter);
+123  				dataWriter = null;
+124  		}
+125  		if( (booleanLogic != null) )
+126  		{
+127  				unload(booleanLogic);
+128  				booleanLogic = null;
+129  		}
+130  	}
+131  }

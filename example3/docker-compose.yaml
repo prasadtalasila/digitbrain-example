@@ -1,0 +1,10 @@
+services:
+  maestro:
+    entrypoint: /home/cosim/entrypoint.sh
+    image: prasadtalasila/maestro1-service-openjdk13
+    volumes:
+    - ./input:/home/input:rw
+    - ./model:/home/model:rw
+    - ./output:/home/output:rw
+version: '3.9'
+

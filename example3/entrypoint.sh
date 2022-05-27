@@ -17,9 +17,17 @@ do
         cd /home/evaluate
         cp /home/model/cosim-model.zip .
         unzip cosim-model.zip
-        java -jar /home/cosim/coe-1.0.10-jar-with-dependencies.jar --configuration cosim.json --oneshot --starttime 0.0 --endtime 20.0 1>>/home/output/debug.log 2>&1
+
+        startTime=`cat time.json | jq .startTime`
+        endTime=`cat time.json | jq .endTime`
+        java -jar /home/cosim/coe-1.0.10-jar-with-dependencies.jar --configuration cosim.json \
+            --oneshot --starttime startTime --endtime endTime 1>>/home/output/debug.log 2>&1
         cp output.csv /home/output/ || true
         cat coe.log >> /home/output/coe.log
+        if [[ -f failed ]]
+        then 
+            mv failed /home/output/error.log
+        fi
 
         # clean up
         cd /home

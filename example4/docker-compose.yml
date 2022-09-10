@@ -1,0 +1,24 @@
+services:
+ codeigniter:
+  image: prasadtalasila/codeigniter-php5
+  volumes:
+   - ./html/:/var/www/html:rw
+   - ./model:/home/model:rw
+   - ./output:/home/output:rw
+   - ./input:/home/input:rw
+  privileged: true
+  ports:
+   - "80:80"
+  environment:
+    EGI_TOKEN: "XXXXX"
+    MODEL_URL: "https://plg-cyfronet-01.datahub.egi.eu/cdmi/DIGITbrain%20model%20repository/DT4DRYER_2/model/cosim-model.zip"
+    PHP_CODE_URL: "https://plg-cyfronet-01.datahub.egi.eu/cdmi/DIGITbrain%20model%20repository/DT4DRYER_2/html/html.zip"
+
+ maestro:
+  entrypoint: /home/cosim/entrypoint.sh
+  image: prasadtalasila/maestro1-service-openjdk13
+  volumes:
+   - ./input:/home/input:rw
+   - ./model:/home/model:rw
+   - ./output:/home/output:rw
+version: '3.9'

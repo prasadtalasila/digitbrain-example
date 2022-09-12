@@ -10,8 +10,9 @@ services:
   ports:
    - "80:80"
   environment:
-    EGI_TOKEN: "XXXXX"
+    MODEL_EGI_TOKEN: "XXXX"
     MODEL_URL: "https://plg-cyfronet-01.datahub.egi.eu/cdmi/DIGITbrain%20model%20repository/DT4DRYER_2/model/cosim-model.zip"
+    PHP_EGI_TOKEN: "XXXX"
     PHP_CODE_URL: "https://plg-cyfronet-01.datahub.egi.eu/cdmi/DIGITbrain%20model%20repository/DT4DRYER_2/html/html.zip"
 
  maestro:

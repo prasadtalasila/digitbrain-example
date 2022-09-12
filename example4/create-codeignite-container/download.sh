@@ -8,14 +8,14 @@ cd /home/download
 
 while :
 do
-  curl --retry 2 --insecure -H "X-Auth-Token: ${EGI_TOKEN}" "${PHP_CODE_URL}" -o html.zip
+  curl --retry 2 --insecure -H "X-Auth-Token: ${PHP_EGI_TOKEN}" "${PHP_CODE_URL}" -o html.zip
   code_status=$?
   if [ $code_status -ne 0 ]
   then 
     echo "php code is not available yet. Will try again in 60 seconds"
   fi
 
-  curl --retry 2 --insecure -H "X-Auth-Token: ${EGI_TOKEN}" "${MODEL_URL}" -o cosim-model.zip
+  curl --retry 2 --insecure -H "X-Auth-Token: ${MODEL_EGI_TOKEN}" "${MODEL_URL}" -o cosim-model.zip
   model_status=$?
   if [ $model_status -ne 0 ]
   then 
@@ -34,3 +34,7 @@ done
 cp cosim-model.zip /home/model
 cp html.zip /var/www/html
 unzip html.zip -d /var/www/html
+chmod -R 777 /var/www/html
+chmod -R 777 /home/model
+chmod -R 777 /home/input
+chmod -R 777 /home/output

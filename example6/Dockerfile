@@ -1,7 +1,7 @@
 FROM openjdk:13
 
 RUN mkdir /home/cosim && \
-  yum install -y curl wget zip unzip && \
+  yum install -y curl wget zip unzip jq && \
   cd /home/cosim && \
   wget https://github.com/INTO-CPS-Association/maestro/releases/download/Release%2F1.0.10/coe-1.0.10-jar-with-dependencies.jar
 
